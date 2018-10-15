@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>This here is my blog</h1>
+<form action="/blog" method="POST">
+    <label>
+
+    </label>
+    <table>
+        <tr>
+            
+        </tr>
+    </table>
+</form>
+
+{% if post|length ==0 %}
+<p>No blog posts yet...</p>
+{% else %}
+    <ul>
+        {% for new_blog in blogs %} <!--double check variables-->
+        <li>{{blogs}}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
