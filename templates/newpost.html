@@ -1,17 +1,16 @@
 {% extends from "blog.html" %}
  <!-- changed above from 'base' to 'blog' to nest inside 'blog.html' -->
 {% block content %}
+
 <h1>Create new blog post</h1>
-<form action="/newpost" method="POST"> <!--check around 34:30 of https://www.youtube.com/watch?v=XHGpPCYmPvI-->
+<form action="/newpost" method="POST"> <!-- ,,,,check around 34:30 of https://www.youtube.com/watch?v=XHGpPCYmPvI-->
     <label for="blog_title">Blog title</label>
     <input name="blog_title" type="text">
+    <span class="error">{{blog_title_error}}</span>
     <br>
-    <label for="blog_date">Date</label>
-    <input name="blog_date" type="DateTime"/>
-    <br>
-    <label for="blog_date">Blog entry</label>
     <textarea name="blog_entry">{0}</textarea> 
     <label for="add_entry">Add Blog entry</label>
+    <span class="error">{{blog_entry_error}}</span>
     <input name="add_entry" type="submit"/>
 
 </form>

@@ -13,12 +13,17 @@
     </table>
 </form>
 
-{% if post|length ==0 %}
+{% if post|length==0 %}
 <p>No blog posts yet...</p>
 {% else %}
     <ul>
-        {% for new_blog in blogs %} <!--double check variables-->
-        <li>{{blogs}}</li>
+        {% for new_blog in blogs %}
+        <li>{{blog.title}}</li> <!--blog name w/ hyperlink to that blog as a page -->
+        <!--body of blog? -->
+            <form method="POST" action="/delete_blog" style="display:inline-block;">
+                <!--action not right label, might not need style either-->
+            <input type ="hidden" name="blog-id" value="{{blog.id}}"/> <!--double check variables-->
+        </form>
         {% endfor %}
     </ul>
 {% endif %}
