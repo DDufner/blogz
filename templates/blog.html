@@ -4,27 +4,22 @@
 <h1>This here is my blog</h1>
 <form action="/blog" method="POST">
     <label>
-
+ 
     </label>
-    <table>
-        <tr>
-            
-        </tr>
-    </table>
-</form>
+</form> %---%---%---%---%--%---%---%---%---%---%---%---%---%---%---%---%---%
 
-{% if post|length==0 %}
+{% if blogs|length==0 %} 
 <p>No blog posts yet...</p>
 {% else %}
-    <ul>
-        {% for new_blog in blogs %}
-        <li>{{blog.title}}</li> <!--blog name w/ hyperlink to that blog as a page -->
-        <!--body of blog? -->
-            <form method="POST" action="/delete_blog" style="display:inline-block;">
-                <!--action not right label, might not need style either-->
-            <input type ="hidden" name="blog-id" value="{{blog.id}}"/> <!--double check variables-->
+{% for new_blog in blogs %} <!--'blogs' is jinja variable that relates to 'full_blog' from main.py-->
+<div> 
+    <a href='/blog?id={{new_blog.id}}'> 
+        <h1>{{new_blog.title}}</h1> <!--was having issues w/ this not matching 'new_blog' above-->
+        <p>{{new_blog.entry}}</p>
         </form>
         {% endfor %}
-    </ul>
+</div>
+
 {% endif %}
+
 {% endblock %}

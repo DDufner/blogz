@@ -1,1 +1,7 @@
-All it need do is display a blog title and blog body. 
+{% extends 'base.html'%}
+{% block content %}
+<div>
+    <h1>{{title}}</h1>
+    <h2>{{entry}}</h2>
+</div>
+{% endblock %}
