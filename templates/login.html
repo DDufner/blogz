@@ -1,0 +1,60 @@
+{{% extends "base.html" %}}
+
+{{% block content %}}
+<nav>
+        <ul id="user-account">
+            <li><a href="/login">login</a></li>
+            <li><a href="/logout">logout</a></li>
+        </ul>
+        <ul>
+            <li><a href="/">home</a></li>
+            <li><a href="/blog">all posts</a></li>
+            <li><a href="/blog/newpost">new post</a></li>
+        </ul>
+    </nav>
+    <style>
+            .error {
+                color: red;
+            }
+        </style>
+
+<h1>Log in</h1>
+<p class="error"></p>
+<form method="POST">
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <label for="username">
+                    Username        
+                    </label>
+                </td>
+                <td>
+                    <input name="username" type="text"value="{{username}}">
+                    <span class="error">{{username_error}}</span><!--might not need-->
+            <!--Needs to be tied to database-->
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">
+                        Password
+                    </label>
+                </td>
+                <td>
+                    <input name="password" type="password">
+                    <span class="error">{{password_error}}</span>
+                <!--Needs to be tied to database-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <label for="Log In">
+        Log In
+    </label>
+    <input type="submit">
+</form>
+<p>Don't have an account? <a href="/signup">Create one!</a></p>
+
+{{% endblock %}}

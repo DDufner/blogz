@@ -1,34 +1,38 @@
 <!doctype html>
 <html>
     <head>
-            
+        <title>Blogz</title>
+        <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="stylesheet" href="/css/styles.css">
         <style>
-
-         </style>
+            .error { color: red;}
+        </style>
     </head>
+    <nav>
+        <ul id="user-account"><!--double check-->
+            <li><a href="/">home</a></li>
+            <li><a href="/blog">all posts</a></li>
+            <li><a href="/blog/newpost">new post</a></li>
+        </ul>
+        <ul>
+            <li><a href="/login">login</a></li>
+            <li><a href="/logout">logout</a></li>
+        </ul>
+    </nav>
 <body>
-    
-
-    <div class="index">
-        <a href='/'>Return to main page</a>
-    </div>
-    <br> 
-    <div class="newpost">
-        <a href='/newpost'>Create new post</a>
-    </div>
  
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
     <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
     </ul>
   {% endif %}
-  {% endwith %}
+{% endwith %}
     
-    {% block content %}
-    {% endblock %} 
+{% block content %}
+{% endblock %} 
     
 </body>
 </html> 

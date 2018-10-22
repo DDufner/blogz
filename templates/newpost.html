@@ -4,14 +4,19 @@
 <form method="POST", name="newpost", class='newpost'> <!-- ,,,,check around 34:30 of https://www.youtube.com/watch?v=XHGpPCYmPvI-->
 
     <label for="blog_title">Blog title</label>
-    
     <input name="blog_title" type="text">
-    <br>
-    <br>
-    <label for="add_entry">Add Blog entry</label>
 
+    <br>
+
+    <label for="blog_owner_id">Author</label>
+    <input name="blog_owner_id" type="text">
+
+    <br>
+
+    <label for="add_entry">Add Blog entry</label>
     <textarea name="blog_entry"></textarea> 
     <input name="add_entry" type="submit"/>
+    
 </form>
 </body>
 {% endblock %}

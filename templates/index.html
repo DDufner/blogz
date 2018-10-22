@@ -1,0 +1,26 @@
+{{% extends "base.html" %}}
+
+{{% block content %}}
+
+<!--displays list of user names-->
+
+<h1>Authors</h1>
+<form action="/index" method="POST">
+    
+</form> %---%---%---%---%--%---%---%---%---%---%---%---%---%---%---%---%---%
+
+{% if blogs|length==0 %} 
+<p>No blog posts yet...</p>
+{% else %}
+{% for new_blog in blogs %} <!--'blogs' is jinja variable that relates to 'full_blog' from main.py-->
+<div> 
+    <a href='/blog?id={{new_blog.id}}'> 
+        <h1>{{new_blog.title}}</h1> <!--was having issues w/ this not matching 'new_blog' above-->
+        <p>{{new_blog.entry}}</p>
+        </form>
+        {% endfor %}
+</div>
+
+{% endif %}
+
+{{% endblock %}}
