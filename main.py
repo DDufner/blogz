@@ -50,36 +50,35 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
-        existing_user = User.query.filter_by(username=username).first()
+        #existing_user = User.query.filter_by(username = session['username']).one() #gets keyerror for user
+        existing_user = User.query.filter_by(username = username).one() #gets Multiple rows were found for, goes through if switched to 'all()'
         if username == existing_user: #might not be correct syntax 
-            flash ("User name already exists")
-            return render_template('/signup') 
+            flash ("User name already exists") 
+            return redirect('/signup') 
         elif len(username) < 3: 
-            flash ("Must be greater than 3 characters")
-            return render_template('/signup') 
+            flash ("Username must be greater than 3 characters")
+            return redirect('/signup') 
         elif len(username) > 20:
-            flash ("Must be less than 20 characters")
-            return render_template('/signup') 
+            flash ("Username must be less than 20 characters")
+            return redirect('/signup') 
         elif len(password) < 3: 
-            flash ("Must be greater than 3 characters")
-            return render_template('/signup') 
+            flash ("Password must be greater than 3 characters")
+            return redirect('/signup') 
         elif len(password) > 20:
-            flash ("Must be less than 20 characters")
-            return render_template('/signup')   
+            flash ("Password must be less than 20 characters")
+            return redirect('/signup')   
         elif not password==verify:
             flash ("Password confirmation does not match password")
-            return render_template('/signup') 
-        else: #HAD not existing_user:
-            new_user = User() #HAD: passed through username, password
+            return redirect('/signup') 
+        else: 
+            new_user = User(username=username, password=password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username 
             url="/index?=" +str(new_user.id)
-            return redirect(url)  #return redirect('/login')
-        # else:
-        #     return "<h1>Duplicate user</h1>"
- 
-    return render_template ("signup.html") 
+            return redirect('/newpost')  #return redirect('/login')
+    else:
+        return render_template ("signup.html") 
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -108,19 +107,18 @@ def require_login():
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login') 
 
-@app.route('/logout') # not clearing input lines 
+@app.route('/logout', methods=["GET"])  
 def logout():
     del session['username']
-    username=''
-    password=''
-    return redirect ("/blog")
+    return redirect ("/")
 
 @app.route("/newpost", methods=["POST", "GET"]) 
 def newpost(): 
     if request.method == 'POST':
         title=request.form["blog_title"]
         entry=request.form["blog_entry"]
-        owner_id=request.form["blog_owner_id"]
+        owner_id=User.query.filter_by(username=session['username']).all() 
+        #owner_id=request.form["blog_owner_id"] #throwing up errors 
         
         if title =="": 
             flash("Please enter title for blog post", "error")
@@ -131,12 +129,12 @@ def newpost():
             return render_template("newpost.html") 
 
         else:
-            full_blog = Blog(title, entry, owner_id) #3rd arg was 'owner_id'
+            full_blog = Blog(title=title, entry=entry, owner_id=owner_id) 
             db.session.add(full_blog)
-            db.session.commit()
+            db.session.commit() ###
 
-            url= "/blog?=" + str(full_blog.id) ###                 
-            return redirect(url) #??? adds index to each blog post
+           
+            return redirect('/blog') #??? adds index to each blog post
     
     return render_template ("newpost.html") 
 
