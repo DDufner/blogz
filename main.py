@@ -43,6 +43,19 @@ def authors():
     
     # return render_template('blog.html', blogs=all_blogs) #title="Build A Blog", posts=Blog.query.filter_by().all())
 
+@app.route("/blog")
+def blog():  
+    author = request.args.get('user')
+    blog_id = request.args.get('blog')
+    if author:
+        user=User.query.filter_by(id=request.args.get('user')).one()
+        blogs=Blog.query.filter_by(owner=user).all()
+        return render_template("blog.html", blogs=blogs)
+    if blog_id:
+        blog=Blog.query.filter_by(id=blog_id).one()
+        return render_template("ind_blog_post.html", blog=blog )
+    blogs= Blog.query.filter_by().all()
+    return render_template ("blog.html", blogs=blogs)
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -51,10 +64,14 @@ def signup():
         password = request.form['password']
         verify = request.form['verify']
         #existing_user = User.query.filter_by(username = session['username']).one() #gets keyerror for user
-        existing_user = User.query.filter_by(username = username).one() #gets Multiple rows were found for, goes through if switched to 'all()'
-        if username == existing_user: #might not be correct syntax 
-            flash ("User name already exists") 
-            return redirect('/signup') 
+        #existing_user = User.query.filter_by(username = username).one() #gets Multiple rows were found for, goes through if switched to 'all()'
+        duplicate_signup = User.query.filter_by(username=username).count()
+        if duplicate_signup > 0:
+            flash('sorry, username already take.')
+            return redirect('/signup')
+        # if username == existing_user: #might not be correct syntax 
+        #     flash ("User name already exists") 
+        #     return redirect('/signup') 
         elif len(username) < 3: 
             flash ("Username must be greater than 3 characters")
             return redirect('/signup') 
@@ -117,7 +134,7 @@ def newpost():
     if request.method == 'POST':
         title=request.form["blog_title"]
         entry=request.form["blog_entry"]
-        owner_id=User.query.filter_by(username=session['username']).all() 
+        user=User.query.filter_by(username=session['owner.id']).first() 
         #owner_id=request.form["blog_owner_id"] #throwing up errors 
         
         if title =="": 
@@ -129,7 +146,7 @@ def newpost():
             return render_template("newpost.html") 
 
         else:
-            full_blog = Blog(title=title, entry=entry, owner_id=owner_id) 
+            full_blog = Blog(title=title, entry=entry, owner=owner) #was 'owner_id
             db.session.add(full_blog)
             db.session.commit() ###
 
