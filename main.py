@@ -14,32 +14,32 @@ class Blog(db.Model):
     entry = db.Column(db.Text) 
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id')) ######double check 'user.id' if issues
 
-    def __init__(self, title, entry, owner_id): 
+    def __init__(self, title, entry, owner): 
         self.title = title
         self.entry = entry
-        self.owner_id = owner_id
+        self.owner = owner
 
 class User(db.Model):
-        id = db.Column(db.Integer, primary_key=True) 
-        username = db.Column(db.String(120))
-        password = db.Column(db.String(20))
-        blogs = db.relationship('Blog', backref='user') #was 'user.id'
+    id = db.Column(db.Integer, primary_key=True) 
+    username = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(20))
+    blogs = db.relationship('Blog', backref='owner') #was 'user.id'
 
-def __init__(self, username, password): #got error so i deleted indention?
-    self.username = username
-    self.password = password
+    def __init__(self, username, password): #got error so i deleted indention?
+        self.username = username
+        self.password = password
 
 @app.route("/", methods=["GET"])
 def index():
+
     return redirect('/blog') 
  
 @app.route("/index", methods=["GET"])
 def authors():
-    authors=User.query.all() 
-    author_id = request.args.get('id') 
-    if author_id: 
-        author_blog = Blog.query.get(author_id)
-        return render_template('index.html', title=author_blog.title, entry=author_blog.entry) 
+    #authors=User.query.filter_by(username=request.args.get('username')).all()
+    #new_author= User.query.all()
+    #author_id = request.args.get('id')
+    return render_template('index.html', authors=authors) 
     
     # return render_template('blog.html', blogs=all_blogs) #title="Build A Blog", posts=Blog.query.filter_by().all())
 
@@ -47,14 +47,15 @@ def authors():
 def blog():  
     author = request.args.get('user')
     blog_id = request.args.get('blog')
+    blogs= Blog.query.all() #moves from line 55
     if author:
         user=User.query.filter_by(id=request.args.get('user')).one()
         blogs=Blog.query.filter_by(owner=user).all()
-        return render_template("blog.html", blogs=blogs)
+        return render_template("ind_blog_post.html", blogs=blogs) #was "blog.html"
     if blog_id:
         blog=Blog.query.filter_by(id=blog_id).one()
         return render_template("ind_blog_post.html", blog=blog )
-    blogs= Blog.query.filter_by().all()
+    
     return render_template ("blog.html", blogs=blogs)
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -93,9 +94,14 @@ def signup():
             db.session.commit()
             session['username'] = username 
             url="/index?=" +str(new_user.id)
-            return redirect('/newpost')  #return redirect('/login')
+            return redirect(ur)  #return redirect('/login')
     else:
         return render_template ("signup.html") 
+
+# @app.route("/ind_blog_post", methods=["POST"])
+# def ind_blog_post():
+#     blog_id=request.form("")
+#     return render_template("ind_blog_post")
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -120,7 +126,7 @@ def login():
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login','signup', 'index', 'newpost'] #double check 'list_blogs'
+    allowed_routes = ['login','signup', 'index', 'blog'] #double check 'list_blogs'
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login') 
 
@@ -134,8 +140,7 @@ def newpost():
     if request.method == 'POST':
         title=request.form["blog_title"]
         entry=request.form["blog_entry"]
-        user=User.query.filter_by(username=session['owner.id']).first() 
-        #owner_id=request.form["blog_owner_id"] #throwing up errors 
+        user=User.query.filter_by(username=session['username']).first() 
         
         if title =="": 
             flash("Please enter title for blog post", "error")
@@ -146,14 +151,13 @@ def newpost():
             return render_template("newpost.html") 
 
         else:
-            full_blog = Blog(title=title, entry=entry, owner=owner) #was 'owner_id
+            full_blog = Blog(title=title, entry=entry, owner=user) #was 'owner_id
             db.session.add(full_blog)
-            db.session.commit() ###
-
-           
-            return redirect('/blog') #??? adds index to each blog post
-    
-    return render_template ("newpost.html") 
+            db.session.commit() 
+            new_id= Blog.query.filter_by(title=title, entry=entry).first().id
+            return render_template('ind_blog_post.html', title=title, entry=entry) #??? adds index to each blog post
+    else:
+        return render_template ("newpost.html") 
 
 if __name__ == '__main__':
     app.run()

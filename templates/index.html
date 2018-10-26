@@ -7,15 +7,13 @@
 <h1>Authors</h1>
 <form action="/index" method="POST">
 </form> 
-
-{% if authors|length==0 %} 
-<p>No authors have posted yet.</p>
+{% if blogs|length==0 %} 
+<p>No authors to list yet!</p>
 {% else %}
-{% for new_author in authors %} <!--'blogs' is jinja variable that relates to 'full_blog' from main.py-->
+{% for new_author in blogs %} <!--'blogs' is jinja variable that relates to 'full_blog' from main.py-->
 <div> 
     <a href='/index?id={{new_author.id}}'> 
-        <h1>{{new_author.username}}</h1> <!--was having issues w/ this not matching 'new_blog' above-->
-        </form>
+        <h1>{{new_author.owner}}</h1> <!--was having issues w/ this not matching 'new_blog' above-->
         {% endfor %}
 </div>
 
