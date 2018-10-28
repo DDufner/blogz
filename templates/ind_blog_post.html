@@ -2,8 +2,11 @@
 {% block content %}
 <ul>
 <div>
-    <h1>{{title}}</h1>
-    <h2>{{entry}}</h2>
+    <h1>Title: {{blog.title}}</h1>
+    <h2>Entry: {{blog.entry}}</h2>
+    <a href='/author_posts?id={{blog.owner.id}}'>
+    <h3>Author: {{blog.owner.username}}</h3>
+    </a>
 </div>
 </ul>
 {% endblock %}

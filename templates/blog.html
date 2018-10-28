@@ -11,12 +11,16 @@
 {% if blogs|length==0 %} 
 <p>No authors posted yet.</p>
 {% else %}
-{% for author in blogs %} <!--'blogs' is jinja variable that relates to 'full_blog' from main.py-->
+{% for blog in blogs %} <!--'blogs' is jinja variable that relates to 'full_blog' from main.py-->
 <div> 
-    <a href='/blog?id={{author.id}}'> 
-        <h1>{{author.title}}</h1> <!--was having issues w/ this not matching 'new_blog' above-->
+    <a href='/blog?id={{blog.id}}'> 
+        <h1>{{blog.title}}</h1> <!--was having issues w/ this not matching 'new_blog' above-->
     </a>
-    <p>{{author.entry}}</p>
+    <p>{{blog.entry}}</p>
+    <br>
+    <a href='/author_posts?id={{blog.owner.id}}'>
+    <p >{{blog.owner.username}}</p>
+    </a>    
 </div> 
         </form>
         {% endfor %}
